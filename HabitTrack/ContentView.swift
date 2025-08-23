@@ -13,6 +13,11 @@ struct HabitItem: Identifiable, Codable, Hashable, Equatable{
     let name: String
     let description: String
     var habitCount: Int
+    var completedDate: String
+    
+//    mutating func modifyDate(date: String){
+//        completedDate.append(date)
+//    }
 }
 
 class Habits: ObservableObject{
@@ -29,17 +34,25 @@ struct ContentView: View {
             List{
                 ForEach(habits.habits, id: \.id){ habit in
                     NavigationLink{
-                        
                         DescriptionView(habit: habit, habits: habits)
                     }label: {
-                        HStack{
-                            Text(habit.name)
+                        VStack(alignment: .leading){
+                            HStack{
+                                Text(habit.name)
+                                Spacer()
+                                Text(habit.completedDate)
+                            }
                             Spacer()
-                            Text(habit.habitCount, format: .number)
+                            HStack{
+                                Text("Times Habit completed: ")
+                                Spacer()
+                                Text(habit.habitCount, format: .number)
+                            }
                         }
                         .padding(.vertical, 5)
                     }
                 }
+                .onDelete(perform: removeHabit)
             }
             .navigationTitle("Habit Track")
             .toolbar{
@@ -56,6 +69,11 @@ struct ContentView: View {
                 AddHabitView(habit: habits)
             }
         }
+    }
+    
+    func removeHabit(at offsets: IndexSet){
+        
+        habits.habits.remove(atOffsets: offsets)
     }
 }
 

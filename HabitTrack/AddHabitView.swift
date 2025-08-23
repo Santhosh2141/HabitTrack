@@ -12,6 +12,7 @@ struct AddHabitView: View {
     @State private var name = ""
     @State private var desc = ""
     @State private var habitCount = 0
+    @State private var completedDate = ""
     var habit: Habits
     
     @Environment(\.dismiss) var dismiss
@@ -26,7 +27,8 @@ struct AddHabitView: View {
                 .navigationTitle("New Habit")
                 .toolbar{
                     Button{
-                        var newHabit = HabitItem(name: name, description: desc, habitCount: 1)
+                        getDate()
+                        var newHabit = HabitItem(name: name, description: desc, habitCount: 1, completedDate: completedDate)
                         if (!newHabit.name.isEmpty){
                             habit.habits.append(newHabit)
                         }
@@ -39,6 +41,14 @@ struct AddHabitView: View {
                 }
             }
         }
+    }
+    
+    func getDate(){
+        let currentDate = Date.now
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, h:mm a"
+        let date = dateFormatter.string(from: currentDate)
+        completedDate = date
     }
 }
 
