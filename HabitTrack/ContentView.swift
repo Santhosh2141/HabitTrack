@@ -21,7 +21,24 @@ struct HabitItem: Identifiable, Codable, Hashable, Equatable{
 }
 
 class Habits: ObservableObject{
-    @Published var habits = [HabitItem]()
+    @Published var habits = [HabitItem](){
+        didSet{
+            if let encoded = try? JSONEncoder().encode(habits){
+                UserDefaults.standard.set(encoded, forKey: "Habits")
+            }
+            
+        }
+    }
+    
+    init() {
+        if let savedHabits = UserDefaults.standard.data(forKey: "Habits"){
+            if let decoded = try? JSONDecoder().decode([HabitItem].self, from: savedHabits){
+                habits = decoded
+                return
+            }
+        }
+        habits = []
+    }
     
 }
 
